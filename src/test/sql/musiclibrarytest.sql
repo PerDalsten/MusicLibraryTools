@@ -1,0 +1,1 @@
+select * from ALBUMS where album_artist='Royal Hunt';

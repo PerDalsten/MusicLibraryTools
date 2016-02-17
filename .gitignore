@@ -1,0 +1,12 @@
+.settings
+
+target
+
+data
+
+logs
+**/*.log
+
+.classpath
+
+.project
