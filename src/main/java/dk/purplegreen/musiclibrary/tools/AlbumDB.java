@@ -8,7 +8,11 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.Arrays;
+import java.util.Collection;
+import java.util.HashMap;
 import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
 import java.util.Properties;
 
 public class AlbumDB {
@@ -92,13 +96,93 @@ public class AlbumDB {
 				}
 			}
 
-			e.printStackTrace();
 			throw new DatabaseException(e);
 		} finally {
 
 			if (rsAlbum != null)
 				try {
 					rsAlbum.close();
+				} catch (SQLException e) {
+				}
+
+			if (stmtAlbum != null)
+				try {
+					stmtAlbum.close();
+				} catch (SQLException e) {
+				}
+
+			if (stmtSong != null)
+				try {
+					stmtSong.close();
+				} catch (SQLException e) {
+				}
+
+			if (con != null) {
+				try {
+					con.close();
+				} catch (SQLException e) {
+					e.printStackTrace();
+				}
+			}
+		}
+	}
+
+	public Collection<Album> load() throws AlbumException {
+
+		Map<Integer, Album> albums = new HashMap<>();
+
+		Connection con = null;
+		PreparedStatement stmtAlbum = null;
+		ResultSet rsAlbum = null;
+		PreparedStatement stmtSong = null;
+		ResultSet rsSong = null;
+
+		try {
+			con = getConnection();
+			con.setAutoCommit(true);
+
+			stmtAlbum = con.prepareStatement(
+					"SELECT id, album_artist AS artist, album_title AS title, album_year AS yr FROM albums");
+
+			rsAlbum = stmtAlbum.executeQuery();
+
+			while (rsAlbum.next()) {
+				Album album = new Album();
+				album.setArtist(rsAlbum.getString("artist"));
+				album.setTitle(rsAlbum.getString("title"));
+				album.setYear(rsAlbum.getInt("yr"));
+				albums.put(rsAlbum.getInt("id"), album);
+			}
+
+			stmtSong = con
+					.prepareStatement("SELECT album_id, song_title AS title, track, disc FROM songs ORDER BY album_id");
+
+			rsSong = stmtSong.executeQuery();
+
+			while (rsSong.next()) {
+				Song song = new Song();
+				song.setTitle(rsSong.getString("title"));
+				song.setTrack(rsSong.getInt("track"));
+				song.setDisc(rsSong.getInt("disc"));
+
+				albums.get(rsSong.getInt("album_id")).getSongs().add(song);
+			}
+
+			return albums.values();
+
+		} catch (SQLException e) {
+
+			throw new DatabaseException(e);
+		} finally {
+			if (rsAlbum != null)
+				try {
+					rsAlbum.close();
+				} catch (SQLException e) {
+				}
+
+			if (rsSong != null)
+				try {
+					rsSong.close();
 				} catch (SQLException e) {
 				}
 

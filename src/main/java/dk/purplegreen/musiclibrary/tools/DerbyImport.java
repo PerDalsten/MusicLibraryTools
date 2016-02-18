@@ -1,5 +1,7 @@
 package dk.purplegreen.musiclibrary.tools;
 
+import java.io.File;
+import java.util.Collection;
 import java.util.Properties;
 
 public class DerbyImport {
@@ -16,8 +18,11 @@ public class DerbyImport {
 	public void importDerby() throws Exception {
 		Properties p = new Properties();
 		p.load(DerbyImport.class.getResourceAsStream("/musiclibrarytools.properties"));
+		
+		Collection<Album> albums = new AlbumDB().load();
 
-		// TODO
-		// Read all albums from database and import as XML
+		File outDir = new File(p.getProperty("albumdir"));
+		outDir.mkdirs();
+		new AlbumIO().save(albums.iterator(), outDir);
 	}
 }
