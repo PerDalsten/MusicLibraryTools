@@ -9,11 +9,15 @@ import javax.xml.bind.JAXBContext;
 import javax.xml.bind.Marshaller;
 import javax.xml.bind.Unmarshaller;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
 public class AlbumTest {
 
+	private final static Logger log = LogManager.getLogger(AlbumTest.class);
+	
 	private static JAXBContext jc;
 
 	@BeforeClass
@@ -42,7 +46,7 @@ public class AlbumTest {
 		ByteArrayOutputStream os = new ByteArrayOutputStream();
 		marshaller.marshal(album, os);
 
-		// log System.out.println(os.toString());
+		log.debug("Album xml: "+os.toString());
 
 		Unmarshaller unmarshaller = jc.createUnmarshaller();
 		album = (Album) unmarshaller.unmarshal(new ByteArrayInputStream(os.toByteArray()));

@@ -15,13 +15,18 @@ import java.util.List;
 import java.util.Map;
 import java.util.Properties;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 public class AlbumDB {
 
+	private final static Logger log = LogManager.getLogger(AlbumDB.class);
+	
 	static {
 		try {
 			Class.forName("org.apache.derby.jdbc.ClientDriver");
 		} catch (ClassNotFoundException e) {
-			e.printStackTrace();
+			log.error("Error initializing AlbumDB", e);
 			throw new RuntimeException("Unable to load database driver", e);
 		}
 	}
