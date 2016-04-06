@@ -10,6 +10,8 @@ import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
@@ -18,12 +20,14 @@ import org.xml.sax.SAXException;
 
 public class PMAXMLImport {
 
+	private final static Logger log = LogManager.getLogger(PMAXMLImport.class);
+
 	public static void main(String[] args) {
 		try {
 			new PMAXMLImport().importPMAXML();
 
 		} catch (Exception e) {
-			e.printStackTrace();
+			log.error(e);
 		}
 	}
 
@@ -78,7 +82,7 @@ public class PMAXMLImport {
 		doc = builder.parse(new File(new File(p.getProperty("pmaxmldir")), "songs.xml"));
 		nodes = doc.getElementsByTagName("table");
 
-		for (int i = 0; i < nodes.getLength(); i++) {			
+		for (int i = 0; i < nodes.getLength(); i++) {
 			NodeList values = nodes.item(i).getChildNodes();
 
 			Song song = new Song();

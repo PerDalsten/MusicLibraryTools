@@ -21,7 +21,7 @@ import org.apache.logging.log4j.Logger;
 public class AlbumDB {
 
 	private final static Logger log = LogManager.getLogger(AlbumDB.class);
-	
+
 	static {
 		try {
 			Class.forName("org.apache.derby.jdbc.ClientDriver");
@@ -93,11 +93,12 @@ public class AlbumDB {
 			con.commit();
 		} catch (SQLException e) {
 
+			log.error(e);
 			if (con != null) {
 				try {
 					con.rollback();
 				} catch (SQLException re) {
-					re.printStackTrace();
+					log.error(re);
 				}
 			}
 
@@ -108,25 +109,28 @@ public class AlbumDB {
 				try {
 					rsAlbum.close();
 				} catch (SQLException e) {
+					log.error(e);
 				}
 
 			if (stmtAlbum != null)
 				try {
 					stmtAlbum.close();
 				} catch (SQLException e) {
+					log.error(e);
 				}
 
 			if (stmtSong != null)
 				try {
 					stmtSong.close();
 				} catch (SQLException e) {
+					log.error(e);
 				}
 
 			if (con != null) {
 				try {
 					con.close();
 				} catch (SQLException e) {
-					e.printStackTrace();
+					log.error(e);
 				}
 			}
 		}
@@ -176,38 +180,42 @@ public class AlbumDB {
 			return albums.values();
 
 		} catch (SQLException e) {
-
+			log.error(e);
 			throw new DatabaseException(e);
 		} finally {
 			if (rsAlbum != null)
 				try {
 					rsAlbum.close();
 				} catch (SQLException e) {
+					log.error(e);
 				}
 
 			if (rsSong != null)
 				try {
 					rsSong.close();
 				} catch (SQLException e) {
+					log.error(e);
 				}
 
 			if (stmtAlbum != null)
 				try {
 					stmtAlbum.close();
 				} catch (SQLException e) {
+					log.error(e);
 				}
 
 			if (stmtSong != null)
 				try {
 					stmtSong.close();
 				} catch (SQLException e) {
+					log.error(e);
 				}
 
 			if (con != null) {
 				try {
 					con.close();
 				} catch (SQLException e) {
-					e.printStackTrace();
+					log.error(e);
 				}
 			}
 		}

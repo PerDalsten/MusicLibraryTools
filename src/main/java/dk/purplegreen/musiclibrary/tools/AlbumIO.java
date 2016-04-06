@@ -15,15 +15,20 @@ import javax.xml.bind.JAXBException;
 import javax.xml.bind.Marshaller;
 import javax.xml.bind.Unmarshaller;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 public class AlbumIO {
 
+	private final static Logger log = LogManager.getLogger(AlbumIO.class);
+	
 	private final JAXBContext jc;
 
 	public AlbumIO() {
 		try {
 			jc = JAXBContext.newInstance(Album.class);
 		} catch (JAXBException e) {
-			e.printStackTrace();
+			log.error(e);
 			throw new NullPointerException("Unable to create JAXBContext");
 		}
 	}
@@ -57,7 +62,7 @@ public class AlbumIO {
 			fos.close();
 
 		} catch (JAXBException e) {
-			e.printStackTrace();
+			log.error(e);
 			throw new IllegalArgumentException();
 		}
 	}
@@ -74,7 +79,7 @@ public class AlbumIO {
 			Album album = (Album) unmarshaller.unmarshal(new FileInputStream(albumFile));
 			return album;
 		} catch (JAXBException e) {
-			e.printStackTrace();
+			log.error(e);
 			throw new IllegalArgumentException();
 		}
 	}

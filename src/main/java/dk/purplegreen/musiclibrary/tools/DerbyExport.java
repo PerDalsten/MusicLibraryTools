@@ -4,14 +4,19 @@ import java.io.File;
 import java.util.List;
 import java.util.Properties;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 public class DerbyExport {
 
+	private final static Logger log = LogManager.getLogger(DerbyExport.class);
+	
 	public static void main(String[] args) {
 		try {
 			new DerbyExport().exportDerby();
 
 		} catch (Exception e) {
-			e.printStackTrace();
+			log.error(e);
 		}
 	}
 

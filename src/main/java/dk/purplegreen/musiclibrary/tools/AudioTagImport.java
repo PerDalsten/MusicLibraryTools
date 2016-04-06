@@ -6,23 +6,27 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Properties;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 import com.mpatric.mp3agic.ID3v2;
 import com.mpatric.mp3agic.Mp3File;
 
 public class AudioTagImport {
+
+	private final static Logger log = LogManager.getLogger(AudioTagImport.class);
+
 	public static void main(String[] args) {
 		try {
 			new AudioTagImport().importAudioTag();
-
 		} catch (Exception e) {
-			e.printStackTrace();
+			log.error(e);
 		}
 	}
 
 	private Map<String, Album> albums = new HashMap<>();
 
 	public void importAudioTag() throws Exception {
-
 		Properties p = new Properties();
 		p.load(AudioTagImport.class.getResourceAsStream("/musiclibrarytools.properties"));
 
@@ -32,14 +36,13 @@ public class AudioTagImport {
 			processDirectory(rootDirectory);
 		}
 
-		File outDir=new File(p.getProperty("albumdir"));
+		File outDir = new File(p.getProperty("albumdir"));
 		outDir.mkdirs();
-		
+
 		new AlbumIO().save(albums.values().iterator(), outDir);
 	}
 
 	public void processDirectory(File dir) throws Exception {
-
 		File[] dirs = dir.listFiles(new FilenameFilter() {
 			@Override
 			public boolean accept(File dir, String name) {
@@ -60,7 +63,6 @@ public class AudioTagImport {
 		});
 
 		for (File mp3File : mp3s) {
-
 			Mp3File mp3 = new Mp3File(mp3File.getAbsolutePath());
 			if (mp3.hasId3v2Tag()) {
 				ID3v2 tag = mp3.getId3v2Tag();
@@ -82,11 +84,11 @@ public class AudioTagImport {
 				song.setTitle(tag.getTitle());
 				song.setTrack(Integer.valueOf(tag.getTrack()));
 				song.setDisc(tag.getPartOfSet() == null ? 1 : Integer.valueOf(tag.getPartOfSet()));
-				
+
 				album.getSongs().add(song);
 
 			} else
-				System.out.println("Missing tag!");
+				log.error("Missing tag!");
 		}
 	}
 }
