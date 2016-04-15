@@ -39,7 +39,7 @@ public class AudioTagImport {
 		File outDir = new File(p.getProperty("albumdir"));
 		outDir.mkdirs();
 
-		new AlbumIO().save(albums.values().iterator(), outDir);
+		new AlbumIO().save(new AlbumCollection(albums.values()), outDir);
 	}
 
 	public void processDirectory(File dir) throws Exception {

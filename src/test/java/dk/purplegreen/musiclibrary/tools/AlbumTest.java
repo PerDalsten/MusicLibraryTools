@@ -22,7 +22,7 @@ public class AlbumTest {
 
 	@BeforeClass
 	public static void setUp() throws Exception {
-		jc = JAXBContext.newInstance(Album.class);
+		jc = JAXBContext.newInstance(AlbumCollection.class);
 	}
 
 	@Test
@@ -40,17 +40,22 @@ public class AlbumTest {
 			album.getSongs().add(new Song(songs[i], i + 1));
 		}
 
+		AlbumCollection albums=new AlbumCollection();
+		albums.addAlbum(album);
+						
 		Marshaller marshaller = jc.createMarshaller();
 		marshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, true);
 
 		ByteArrayOutputStream os = new ByteArrayOutputStream();
-		marshaller.marshal(album, os);
+		marshaller.marshal(albums, os);
 
-		log.debug("Album xml: "+os.toString());
+		log.debug("Albums xml: "+os.toString());
 
 		Unmarshaller unmarshaller = jc.createUnmarshaller();
-		album = (Album) unmarshaller.unmarshal(new ByteArrayInputStream(os.toByteArray()));
+		albums = (AlbumCollection) unmarshaller.unmarshal(new ByteArrayInputStream(os.toByteArray()));
 
+		album=albums.getAlbums().get(0);
+		
 		assertEquals("Wrong artist", "Aerosmith", album.getArtist());
 		assertEquals("Wrong title", "Draw the Line", album.getTitle());
 		assertEquals("Wrong year", 1977, album.getYear());

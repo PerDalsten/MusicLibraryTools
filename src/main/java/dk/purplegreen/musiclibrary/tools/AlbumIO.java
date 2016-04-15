@@ -6,8 +6,9 @@ import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.FilenameFilter;
 import java.io.IOException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Iterator;
+import java.util.Date;
 import java.util.List;
 
 import javax.xml.bind.JAXBContext;
@@ -21,42 +22,36 @@ import org.apache.logging.log4j.Logger;
 public class AlbumIO {
 
 	private final static Logger log = LogManager.getLogger(AlbumIO.class);
-	
+
 	private final JAXBContext jc;
 
 	public AlbumIO() {
 		try {
-			jc = JAXBContext.newInstance(Album.class);
+			jc = JAXBContext.newInstance(AlbumCollection.class);
 		} catch (JAXBException e) {
 			log.error(e);
 			throw new NullPointerException("Unable to create JAXBContext");
 		}
 	}
 
-	public void save(Album album, File directory) throws IOException {
+	public void save(AlbumCollection albums, File directory) throws IOException {
 
 		try {
 			Marshaller marshaller = jc.createMarshaller();
 			marshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, true);
 
 			ByteArrayOutputStream os = new ByteArrayOutputStream();
-			marshaller.marshal(album, os);
+			marshaller.marshal(albums, os);
 
 			byte[] xml = os.toByteArray();
 
-			StringBuilder fileName = new StringBuilder(album.getArtist());
-			fileName.append("_");
-			fileName.append(album.getTitle());
+			SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd-HHmmss");
+
+			StringBuilder fileName = new StringBuilder("albums_");
+			fileName.append(sdf.format(new Date()));
 			fileName.append(".xml");
 
-			String file = fileName.toString();
-
-			char[] illegalChars = new char[] { ':', '/', '\\', '?', '*', '<', '>', '|', '%', '#', '~', '&', '"' };
-			for (char c : illegalChars) {
-				file = file.replace(c, '_');
-			}
-
-			FileOutputStream fos = new FileOutputStream(new File(directory, file));
+			FileOutputStream fos = new FileOutputStream(new File(directory, fileName.toString()));
 			fos.write(xml);
 			fos.flush();
 			fos.close();
@@ -67,17 +62,11 @@ public class AlbumIO {
 		}
 	}
 
-	public void save(Iterator<Album> albums, File directory) throws IOException {
-		while (albums.hasNext()) {
-			save(albums.next(), directory);
-		}
-	}
-
-	public Album load(File albumFile) throws IOException {
+	public AlbumCollection load(File albumFile) throws IOException {
 		try {
 			Unmarshaller unmarshaller = jc.createUnmarshaller();
-			Album album = (Album) unmarshaller.unmarshal(new FileInputStream(albumFile));
-			return album;
+			AlbumCollection albums = (AlbumCollection) unmarshaller.unmarshal(new FileInputStream(albumFile));
+			return albums;
 		} catch (JAXBException e) {
 			log.error(e);
 			throw new IllegalArgumentException();
@@ -87,15 +76,15 @@ public class AlbumIO {
 	public List<Album> loadDirectory(File directory) throws IOException {
 		List<Album> albums = new ArrayList<>();
 
-		File[] albumFiles = directory.listFiles(new FilenameFilter() {
+		File[] albumCollections = directory.listFiles(new FilenameFilter() {
 			@Override
 			public boolean accept(File dir, String name) {
 				return (name.endsWith(".xml"));
 			}
 		});
 
-		for (File album : albumFiles) {
-			albums.add(load(album));
+		for (File ac : albumCollections) {
+			albums.addAll(load(ac).getAlbums());
 		}
 		return albums;
 	}

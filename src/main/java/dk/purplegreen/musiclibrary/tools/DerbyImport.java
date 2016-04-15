@@ -28,6 +28,7 @@ public class DerbyImport {
 
 		File outDir = new File(p.getProperty("albumdir"));
 		outDir.mkdirs();
-		new AlbumIO().save(albums.iterator(), outDir);
+				
+		new AlbumIO().save(new AlbumCollection(albums), outDir);
 	}
 }

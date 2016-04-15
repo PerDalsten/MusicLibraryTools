@@ -114,8 +114,8 @@ public class PMAXMLImport {
 
 			albums.get(albumId).getSongs().add(song);
 		}
-
-		new AlbumIO().save(albums.values().iterator(), new File(p.getProperty("albumdir")));
+		
+		new AlbumIO().save(new AlbumCollection(albums.values()), new File(p.getProperty("albumdir")));
 	}
 
 }
