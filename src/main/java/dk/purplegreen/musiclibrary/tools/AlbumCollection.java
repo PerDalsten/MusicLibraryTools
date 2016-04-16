@@ -8,7 +8,7 @@ import java.util.List;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 
-@XmlRootElement(name="albums")
+@XmlRootElement(name = "albums")
 public class AlbumCollection implements Iterable<Album> {
 
 	public AlbumCollection() {
@@ -34,4 +34,7 @@ public class AlbumCollection implements Iterable<Album> {
 		getAlbums().add(album);
 	}
 
+	public void addCollection(AlbumCollection collection) {
+		this.albums.addAll(collection.getAlbums());
+	}
 }

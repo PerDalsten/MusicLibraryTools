@@ -9,9 +9,11 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.Iterator;
-import java.util.List;
+import java.util.LinkedList;
 import java.util.Map;
 import java.util.Properties;
 
@@ -151,7 +153,7 @@ public class AlbumDB {
 			con.setAutoCommit(true);
 
 			stmtAlbum = con.prepareStatement(
-					"SELECT id, album_artist AS artist, album_title AS title, album_year AS yr FROM albums");
+					"SELECT id, album_artist AS artist, album_title AS title, album_year AS yr FROM albums ORDER BY artist, yr");
 
 			rsAlbum = stmtAlbum.executeQuery();
 
@@ -163,8 +165,8 @@ public class AlbumDB {
 				albums.put(rsAlbum.getInt("id"), album);
 			}
 
-			stmtSong = con
-					.prepareStatement("SELECT album_id, song_title AS title, track, disc FROM songs ORDER BY album_id");
+			stmtSong = con.prepareStatement(
+					"SELECT album_id, song_title AS title, track, disc FROM songs ORDER BY album_id, disc, track");
 
 			rsSong = stmtSong.executeQuery();
 
@@ -177,7 +179,18 @@ public class AlbumDB {
 				albums.get(rsSong.getInt("album_id")).getSongs().add(song);
 			}
 
-			return albums.values();
+			LinkedList<Album> result = new LinkedList<>(albums.values());
+
+			Collections.sort(result, new Comparator<Album>() {
+				@Override
+				public int compare(Album o1, Album o2) {
+					return o1.getArtist().toLowerCase().compareTo(o2.getArtist().toLowerCase()) == 0
+							? o1.getYear() - o2.getYear()
+							: o1.getArtist().toLowerCase().compareTo(o2.getArtist().toLowerCase());
+				}
+			});
+
+			return result;
 
 		} catch (SQLException e) {
 			log.error(e);

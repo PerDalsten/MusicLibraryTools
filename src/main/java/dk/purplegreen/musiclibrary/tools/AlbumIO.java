@@ -7,9 +7,7 @@ import java.io.FileOutputStream;
 import java.io.FilenameFilter;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Date;
-import java.util.List;
 
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
@@ -73,8 +71,8 @@ public class AlbumIO {
 		}
 	}
 
-	public List<Album> loadDirectory(File directory) throws IOException {
-		List<Album> albums = new ArrayList<>();
+	public AlbumCollection loadDirectory(File directory) throws IOException {
+		AlbumCollection albums = new AlbumCollection();
 
 		File[] albumCollections = directory.listFiles(new FilenameFilter() {
 			@Override
@@ -84,7 +82,7 @@ public class AlbumIO {
 		});
 
 		for (File ac : albumCollections) {
-			albums.addAll(load(ac).getAlbums());
+			albums.addCollection(load(ac));
 		}
 		return albums;
 	}

@@ -1,5 +1,8 @@
 package dk.purplegreen.musiclibrary.tools;
 
+import javax.xml.bind.annotation.XmlType;
+
+@XmlType(propOrder = { "track", "title", "disc" })
 public class Song {
 	private String title;
 	private int track;
