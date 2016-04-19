@@ -52,6 +52,8 @@ public class AlbumDB {
 	public void save(Iterator<Album> albums) throws AlbumException {
 
 		Connection con = null;
+		PreparedStatement stmtArtist = null;
+		ResultSet rsArtist = null;
 		PreparedStatement stmtAlbum = null;
 		ResultSet rsAlbum = null;
 		PreparedStatement stmtSong = null;
@@ -59,17 +61,37 @@ public class AlbumDB {
 		try {
 			con = getConnection();
 
-			String sql = "INSERT INTO albums (album_artist, album_title, album_year) VALUES (?,?,?)";
+			String sql = "INSERT INTO album (artist_id, album_title, album_year) VALUES (?,?,?)";
 			stmtAlbum = con.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
 
-			sql = "INSERT INTO songs (album_id, song_title, track, disc) VALUES (?,?,?,?)";
+			sql = "INSERT INTO song (album_id, song_title, track, disc) VALUES (?,?,?,?)";
 			stmtSong = con.prepareStatement(sql);
+
+			sql = "INSERT INTO artist (artist_name) VALUES (?)";
+			stmtArtist = con.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
+
+			Map<String, Integer> artistMap = new HashMap<>();
+			rsArtist = con.createStatement().executeQuery("SELECT id, artist_name AS artist FROM artist");
+			while (rsArtist.next()) {
+				artistMap.put(rsArtist.getString("artist"), rsArtist.getInt("id"));
+			}
 
 			while (albums.hasNext()) {
 
 				Album album = albums.next();
 
-				stmtAlbum.setString(1, album.getArtist());
+				if (artistMap.get(album.getArtist()) == null) {
+					stmtArtist.setString(1, album.getArtist());
+					stmtArtist.executeUpdate();
+					rsArtist = stmtArtist.getGeneratedKeys();
+					if (rsArtist.next()) {
+						int artist_id = rsArtist.getInt(1);
+						artistMap.put(album.getArtist(), artist_id);
+						log.info("Created artist: " + album.getArtist() + " with id: " + artist_id);
+					}
+				}
+
+				stmtAlbum.setInt(1, artistMap.get(album.getArtist()));
 				stmtAlbum.setString(2, album.getTitle());
 				stmtAlbum.setInt(3, album.getYear());
 
@@ -106,28 +128,45 @@ public class AlbumDB {
 
 			throw new DatabaseException(e);
 		} finally {
-
-			if (rsAlbum != null)
+			if (rsArtist != null) {
 				try {
-					rsAlbum.close();
+					rsArtist.close();
 				} catch (SQLException e) {
 					log.error(e);
 				}
+			}
+			if (stmtAlbum != null) {
 
-			if (stmtAlbum != null)
 				try {
 					stmtAlbum.close();
 				} catch (SQLException e) {
 					log.error(e);
 				}
+			}
 
-			if (stmtSong != null)
+			if (rsAlbum != null) {
+				try {
+					rsAlbum.close();
+				} catch (SQLException e) {
+					log.error(e);
+				}
+			}
+			if (stmtAlbum != null) {
+
+				try {
+					stmtAlbum.close();
+				} catch (SQLException e) {
+					log.error(e);
+				}
+			}
+			if (stmtSong != null) {
+
 				try {
 					stmtSong.close();
 				} catch (SQLException e) {
 					log.error(e);
 				}
-
+			}
 			if (con != null) {
 				try {
 					con.close();
@@ -153,7 +192,7 @@ public class AlbumDB {
 			con.setAutoCommit(true);
 
 			stmtAlbum = con.prepareStatement(
-					"SELECT id, album_artist AS artist, album_title AS title, album_year AS yr FROM albums ORDER BY artist, yr");
+					"SELECT album.id AS id, artist.artist_name AS artist, album.album_title AS title, album.album_year AS yr FROM album JOIN artist ON album.artist_id = artist.id ORDER BY artist, yr");
 
 			rsAlbum = stmtAlbum.executeQuery();
 
@@ -166,7 +205,7 @@ public class AlbumDB {
 			}
 
 			stmtSong = con.prepareStatement(
-					"SELECT album_id, song_title AS title, track, disc FROM songs ORDER BY album_id, disc, track");
+					"SELECT album_id, song_title AS title, track, disc FROM song ORDER BY album_id, disc, track");
 
 			rsSong = stmtSong.executeQuery();
 
