@@ -29,7 +29,7 @@ public class AlbumDB {
 			Class.forName("org.apache.derby.jdbc.ClientDriver");
 		} catch (ClassNotFoundException e) {
 			log.error("Error initializing AlbumDB", e);
-			throw new RuntimeException("Unable to load database driver", e);
+			throw new IllegalStateException("Unable to load database driver", e);
 		}
 	}
 
@@ -57,6 +57,8 @@ public class AlbumDB {
 		PreparedStatement stmtAlbum = null;
 		ResultSet rsAlbum = null;
 		PreparedStatement stmtSong = null;
+		Statement stmtExistingArtists = null;
+		ResultSet rsExistingArtists = null;
 
 		try {
 			con = getConnection();
@@ -71,9 +73,11 @@ public class AlbumDB {
 			stmtArtist = con.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
 
 			Map<String, Integer> artistMap = new HashMap<>();
-			rsArtist = con.createStatement().executeQuery("SELECT id, artist_name AS artist FROM artist");
-			while (rsArtist.next()) {
-				artistMap.put(rsArtist.getString("artist"), rsArtist.getInt("id"));
+
+			stmtExistingArtists = con.createStatement();
+			rsExistingArtists = stmtExistingArtists.executeQuery("SELECT id, artist_name AS artist FROM artist");
+			while (rsExistingArtists.next()) {
+				artistMap.put(rsExistingArtists.getString("artist"), rsExistingArtists.getInt("id"));
 			}
 
 			while (albums.hasNext()) {
@@ -89,6 +93,7 @@ public class AlbumDB {
 						artistMap.put(album.getArtist(), artist_id);
 						log.info("Created artist: " + album.getArtist() + " with id: " + artist_id);
 					}
+					rsArtist.close();
 				}
 
 				stmtAlbum.setInt(1, artistMap.get(album.getArtist()));
@@ -163,6 +168,34 @@ public class AlbumDB {
 
 				try {
 					stmtSong.close();
+				} catch (SQLException e) {
+					log.error(e);
+				}
+			}
+			if (stmtArtist != null) {
+				try {
+					stmtArtist.close();
+				} catch (SQLException e) {
+					log.error(e);
+				}
+			}
+			if (rsArtist != null) {
+				try {
+					rsArtist.close();
+				} catch (SQLException e) {
+					log.error(e);
+				}
+			}
+			if (stmtExistingArtists != null) {
+				try {
+					stmtExistingArtists.close();
+				} catch (SQLException e) {
+					log.error(e);
+				}
+			}
+			if (rsExistingArtists != null) {
+				try {
+					rsExistingArtists.close();
 				} catch (SQLException e) {
 					log.error(e);
 				}

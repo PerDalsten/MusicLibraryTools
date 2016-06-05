@@ -77,7 +77,7 @@ public class AlbumIO {
 		File[] albumCollections = directory.listFiles(new FilenameFilter() {
 			@Override
 			public boolean accept(File dir, String name) {
-				return (name.endsWith(".xml"));
+				return name.endsWith(".xml");
 			}
 		});
 

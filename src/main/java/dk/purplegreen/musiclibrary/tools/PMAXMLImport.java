@@ -20,7 +20,7 @@ import org.xml.sax.SAXException;
 
 public class PMAXMLImport {
 
-	private final static Logger log = LogManager.getLogger(PMAXMLImport.class);
+	private static final Logger log = LogManager.getLogger(PMAXMLImport.class);
 
 	public static void main(String[] args) {
 		try {
