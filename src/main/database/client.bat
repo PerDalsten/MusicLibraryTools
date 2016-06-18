@@ -2,13 +2,16 @@
 setlocal
 
 set DERBY_HOME="%JAVA_HOME%\db"
+set DERBY_DATA=%~dp0
 
 set JAVA=%JAVA_HOME%\bin\java
 
-REM To create database
+REM Client connect:
+REM Embedded: CONNECT 'jdbc:derby:musiclibrarydb;create=true';
 REM Network Client: CONNECT 'jdbc:derby://localhost:1527/musiclibrarydb;create=true';
-REM run 'musiclibrary.sql';
 
-%JAVA% -jar %DERBY_HOME%/lib/derbyrun.jar ij
+REM To create database from ij: run 'musiclibrary.sql';
+
+%JAVA% -Dderby.system.home=%DERBY_DATA% -jar %DERBY_HOME%/lib/derbyrun.jar ij
                  
 endlocal
