@@ -12,3 +12,4 @@ logs
 .project
 
 src/main/database/musiclibrarydb
+/.DS_Store
