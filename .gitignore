@@ -13,3 +13,4 @@ logs
 
 src/main/database/musiclibrarydb
 /.DS_Store
+*.launch
