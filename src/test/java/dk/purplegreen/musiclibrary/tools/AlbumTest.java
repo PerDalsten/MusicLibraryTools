@@ -17,7 +17,7 @@ import org.junit.Test;
 public class AlbumTest {
 
 	private final static Logger log = LogManager.getLogger(AlbumTest.class);
-	
+
 	private static JAXBContext jc;
 
 	@BeforeClass
@@ -40,22 +40,22 @@ public class AlbumTest {
 			album.getSongs().add(new Song(songs[i], i + 1));
 		}
 
-		AlbumCollection albums=new AlbumCollection();
+		AlbumCollection albums = new AlbumCollection();
 		albums.addAlbum(album);
-						
+
 		Marshaller marshaller = jc.createMarshaller();
 		marshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, true);
 
 		ByteArrayOutputStream os = new ByteArrayOutputStream();
 		marshaller.marshal(albums, os);
 
-		log.debug("Albums xml: "+os.toString());
+		log.debug("Albums xml: " + os.toString());
 
 		Unmarshaller unmarshaller = jc.createUnmarshaller();
 		albums = (AlbumCollection) unmarshaller.unmarshal(new ByteArrayInputStream(os.toByteArray()));
 
-		album=albums.getAlbums().get(0);
-		
+		album = albums.getAlbums().get(0);
+
 		assertEquals("Wrong artist", "Aerosmith", album.getArtist());
 		assertEquals("Wrong title", "Draw the Line", album.getTitle());
 		assertEquals("Wrong year", 1977, album.getYear());
@@ -65,5 +65,23 @@ public class AlbumTest {
 		for (Song song : album.getSongs()) {
 			assertEquals("Wrong song title", songs[song.getTrack() - 1], song.getTitle());
 		}
+	}
+
+	@Test
+	public void testAlbumToString() {
+		Album album = new Album();
+		album.setArtist("Aerosmith");
+		album.setTitle("Draw the Line");
+		album.setYear(1977);
+
+		assertEquals("Wrong toString", "Title: Draw the Line, Artist: Aerosmith, Year: 1977", album.toString());
+	}
+
+	@Test
+	public void testSongToString() {
+
+		Song song = new Song("Milk Cow Blues", 9);
+
+		assertEquals("Wrong toString", "Title: Milk Cow Blues, Track: 9, Disc: 1", song.toString());
 	}
 }

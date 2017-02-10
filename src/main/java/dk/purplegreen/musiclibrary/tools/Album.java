@@ -44,4 +44,16 @@ public class Album {
 	public List<Song> getSongs() {
 		return songs;
 	}
+
+	@Override
+	public String toString() {
+		StringBuilder result = new StringBuilder("Title: ");
+		result.append(title);
+		result.append(", Artist: ");
+		result.append(artist);
+		result.append(", Year: ");
+		result.append(year);
+
+		return result.toString();
+	}
 }

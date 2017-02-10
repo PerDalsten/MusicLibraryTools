@@ -39,4 +39,16 @@ public class Song {
 	public void setDisc(int disc) {
 		this.disc = disc;
 	}
+
+	@Override
+	public String toString() {
+		StringBuilder result = new StringBuilder("Title: ");
+		result.append(title);
+		result.append(", Track: ");
+		result.append(track);
+		result.append(", Disc: ");
+		result.append(disc);
+
+		return result.toString();
+	}
 }

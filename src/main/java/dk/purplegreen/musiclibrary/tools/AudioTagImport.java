@@ -78,6 +78,9 @@ public class AudioTagImport {
 					album.setTitle(title);
 					album.setYear(Integer.valueOf(tag.getYear()));
 					albums.put(key, album);
+					if (log.isInfoEnabled()) {
+						log.info("Added album: " + album);
+					}
 				}
 
 				Song song = new Song();
@@ -86,9 +89,12 @@ public class AudioTagImport {
 				song.setDisc(tag.getPartOfSet() == null ? 1 : Integer.valueOf(tag.getPartOfSet()));
 
 				album.getSongs().add(song);
+				if (log.isInfoEnabled()) {
+					log.info("Added song: " + song);
+				}
 
 			} else
-				log.error("Missing tag!");
+				log.error("Missing ID3v2 tag in file: " + mp3File);
 		}
 	}
 }

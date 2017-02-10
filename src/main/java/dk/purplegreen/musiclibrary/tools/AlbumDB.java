@@ -108,6 +108,8 @@ public class AlbumDB {
 					album_id = rsAlbum.getInt(1);
 				}
 
+				log.info("Created album: " + album + " with id: " + album_id);
+
 				for (Song song : album.getSongs()) {
 					stmtSong.setInt(1, album_id);
 					stmtSong.setString(2, song.getTitle());
