@@ -4,11 +4,11 @@
 
 	<groupId>dk.purplegreen.musiclibrary</groupId>
 	<artifactId>MusicLibraryTools</artifactId>
-	<version>1.1.2-SNAPSHOT</version>
+	<version>1.2</version>
 	<packaging>jar</packaging>
 
 	<name>MusicLibraryTools</name>
-	<url>http://www.purplegreen.dk/musiclibrary</url>
+	<url>http://www.purplegreen.dk/musiclibrarytools</url>
 
 	<properties>
 		<log4j.version>2.8</log4j.version>
