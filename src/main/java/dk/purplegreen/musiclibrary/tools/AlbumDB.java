@@ -1,6 +1,5 @@
 package dk.purplegreen.musiclibrary.tools;
 
-import java.io.IOException;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
@@ -15,7 +14,6 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.Map;
-import java.util.Properties;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -24,23 +22,14 @@ public class AlbumDB {
 
 	private final static Logger log = LogManager.getLogger(AlbumDB.class);
 
-	static {
-		try {
-			Class.forName("org.apache.derby.jdbc.ClientDriver");
-		} catch (ClassNotFoundException e) {
-			log.error("Error initializing AlbumDB", e);
-			throw new IllegalStateException("Unable to load database driver", e);
-		}
-	}
+	private String connectionURL;
 
-	private Properties p = new Properties();
-
-	public AlbumDB() throws IOException {
-		p.load(AlbumDB.class.getResourceAsStream("/musiclibrarytools.properties"));
+	public AlbumDB(String connectionURL) {
+		this.connectionURL = connectionURL;
 	}
 
 	private Connection getConnection() throws SQLException {
-		Connection con = DriverManager.getConnection(p.getProperty("jdbc.url"));
+		Connection con = DriverManager.getConnection(connectionURL);
 		con.setAutoCommit(false);
 		return con;
 	}

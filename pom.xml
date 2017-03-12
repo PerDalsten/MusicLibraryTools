@@ -4,7 +4,7 @@
 
 	<groupId>dk.purplegreen.musiclibrary</groupId>
 	<artifactId>MusicLibraryTools</artifactId>
-	<version>1.2</version>
+	<version>1.2.1-SNAPSHOT</version>
 	<packaging>jar</packaging>
 
 	<name>MusicLibraryTools</name>
@@ -13,6 +13,7 @@
 	<properties>
 		<log4j.version>2.8</log4j.version>
 		<derby.version>10.13.1.1</derby.version>
+		<mysql.version>6.0.6</mysql.version>
 		<eclipselink.version>2.6.4</eclipselink.version>
 		<junit.version>4.12</junit.version>
 		<mp3agic.version>0.9.0</mp3agic.version>
@@ -37,6 +38,11 @@
 			<artifactId>derbyclient</artifactId>
 			<version>${derby.version}</version>
 			<scope>runtime</scope>
+		</dependency>
+		<dependency>
+			<groupId>mysql</groupId>
+			<artifactId>mysql-connector-java</artifactId>
+			<version>${mysql.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>com.mpatric</groupId>

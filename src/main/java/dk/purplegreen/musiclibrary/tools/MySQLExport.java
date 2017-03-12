@@ -6,23 +6,22 @@ import java.util.Properties;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-public class DerbyExport {
+public class MySQLExport {
 
-	private final static Logger log = LogManager.getLogger(DerbyExport.class);
+	private final static Logger log = LogManager.getLogger(MySQLExport.class);
 
 	static {
 		try {
-			Class.forName("org.apache.derby.jdbc.ClientDriver");	
+			Class.forName("com.mysql.cj.jdbc.Driver");
 		} catch (ClassNotFoundException e) {
-			log.error("Error initializing AlbumDB", e);
+			log.error("Error initializing MySQLExport", e);
 			throw new IllegalStateException("Unable to load database driver", e);
 		}
 	}
-	
-	
+
 	public static void main(String[] args) {
 		try {
-			new DerbyExport().export();
+			new MySQLExport().export();
 
 		} catch (Exception e) {
 			log.error(e);
@@ -31,10 +30,10 @@ public class DerbyExport {
 
 	private void export() throws Exception {
 		Properties p = new Properties();
-		p.load(DerbyExport.class.getResourceAsStream("/musiclibrarytools.properties"));
+		p.load(MySQLExport.class.getResourceAsStream("/musiclibrarytools.properties"));
 
 		AlbumCollection albums = new AlbumIO().loadDirectory(new File(p.getProperty("albumdir")));
 
-		new AlbumDB(p.getProperty("jdbc.url.derby")).save(albums.iterator());
+		new AlbumDB(p.getProperty("jdbc.url.mysql")).save(albums.iterator());
 	}
 }
