@@ -31,6 +31,7 @@ CREATE TABLE song
     FOREIGN KEY (album_id) REFERENCES album (id)
 );
 
+USE mysql;
 
 CREATE USER 'musiclibrary'@'localhost' IDENTIFIED BY 'musiclibrary';
 
