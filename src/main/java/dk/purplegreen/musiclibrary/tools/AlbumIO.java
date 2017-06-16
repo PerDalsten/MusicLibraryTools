@@ -49,11 +49,15 @@ public class AlbumIO {
 			fileName.append(sdf.format(new Date()));
 			fileName.append(".xml");
 
-			FileOutputStream fos = new FileOutputStream(new File(directory, fileName.toString()));
-			fos.write(xml);
-			fos.flush();
-			fos.close();
-
+			FileOutputStream fos = null;
+			try {
+				fos = new FileOutputStream(new File(directory, fileName.toString()));
+				fos.write(xml);
+				fos.flush();
+			} finally {
+				if (fos != null)
+					fos.close();
+			}			
 		} catch (JAXBException e) {
 			log.error(e);
 			throw new IllegalArgumentException();

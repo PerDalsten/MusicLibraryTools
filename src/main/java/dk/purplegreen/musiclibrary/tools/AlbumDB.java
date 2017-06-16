@@ -123,34 +123,17 @@ public class AlbumDB {
 			}
 
 			throw new DatabaseException(e);
-		} finally {
-			if (rsArtist != null) {
-				try {
-					rsArtist.close();
-				} catch (SQLException e) {
-					log.error(e);
-				}
-			}
+		} finally {			
 			if (stmtAlbum != null) {
-
 				try {
 					stmtAlbum.close();
 				} catch (SQLException e) {
 					log.error(e);
 				}
 			}
-
 			if (rsAlbum != null) {
 				try {
 					rsAlbum.close();
-				} catch (SQLException e) {
-					log.error(e);
-				}
-			}
-			if (stmtAlbum != null) {
-
-				try {
-					stmtAlbum.close();
 				} catch (SQLException e) {
 					log.error(e);
 				}
