@@ -12,5 +12,8 @@ logs
 .project
 
 src/main/database/musiclibrarydb
-/.DS_Store
+**/.DS_Store
 *.launch
+
+*.iml
+.idea
