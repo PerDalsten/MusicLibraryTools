@@ -9,7 +9,7 @@ import org.apache.logging.log4j.Logger;
 
 public class DerbyImport {
 
-	private final static Logger log = LogManager.getLogger(DerbyImport.class);
+	private static final Logger log = LogManager.getLogger(DerbyImport.class);
 
 	static {
 		try {

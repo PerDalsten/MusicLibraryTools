@@ -8,7 +8,7 @@ import org.apache.logging.log4j.Logger;
 
 public class MySQLExport {
 
-	private final static Logger log = LogManager.getLogger(MySQLExport.class);
+	private static final Logger log = LogManager.getLogger(MySQLExport.class);
 
 	static {
 		try {

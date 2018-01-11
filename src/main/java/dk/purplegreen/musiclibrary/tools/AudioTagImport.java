@@ -1,7 +1,6 @@
 package dk.purplegreen.musiclibrary.tools;
 
 import java.io.File;
-import java.io.FilenameFilter;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Properties;
@@ -14,7 +13,7 @@ import com.mpatric.mp3agic.Mp3File;
 
 public class AudioTagImport {
 
-	private final static Logger log = LogManager.getLogger(AudioTagImport.class);
+	private static final Logger log = LogManager.getLogger(AudioTagImport.class);
 
 	public static void main(String[] args) {
 		try {
@@ -43,25 +42,14 @@ public class AudioTagImport {
 	}
 
 	public void processDirectory(File dir) throws Exception {
-		File[] dirs = dir.listFiles(new FilenameFilter() {
-			@Override
-			public boolean accept(File dir, String name) {
-				return new File(dir, name).isDirectory();
-			}
-		});
 
+		File[] dirs = dir.listFiles(File::isDirectory);
 		for (File subDir : dirs) {
 			processDirectory(subDir);
 		}
 
 		// MP3s in this directory
-		File[] mp3s = dir.listFiles(new FilenameFilter() {
-			@Override
-			public boolean accept(File dir, String name) {
-				return (name.endsWith(".mp3"));
-			}
-		});
-
+		File[] mp3s = dir.listFiles(file -> file.getName().endsWith(".mp3"));
 		for (File mp3File : mp3s) {
 			Mp3File mp3 = new Mp3File(mp3File.getAbsolutePath());
 			if (mp3.hasId3v2Tag()) {
