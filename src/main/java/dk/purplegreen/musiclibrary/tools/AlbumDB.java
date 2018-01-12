@@ -6,13 +6,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.Comparator;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.LinkedList;
-import java.util.Map;
+import java.util.*;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -44,7 +38,7 @@ public class AlbumDB {
 	}
 
 	public void save(Album album) throws AlbumException {
-		save(Arrays.asList(album).iterator());
+		save(Collections.singletonList(album).iterator());
 	}
 	
 	public void save(Iterator<Album> albums) throws AlbumException {
@@ -55,7 +49,7 @@ public class AlbumDB {
 					Statement.RETURN_GENERATED_KEYS);
 					PreparedStatement stmtAlbum = con.prepareStatement(INSERT_ALBUM_SQL,
 							Statement.RETURN_GENERATED_KEYS);
-					PreparedStatement stmtSong = con.prepareStatement(INSERT_SONG_SQL);) {
+					PreparedStatement stmtSong = con.prepareStatement(INSERT_SONG_SQL)) {
 
 				Map<String, Integer> artistMap = new HashMap<>();
 				try (PreparedStatement stmtExistingArtists = con.prepareStatement(SELECT_ARTIST_SQL)) {
