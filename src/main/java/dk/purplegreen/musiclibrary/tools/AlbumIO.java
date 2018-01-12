@@ -59,8 +59,7 @@ public class AlbumIO {
 	public AlbumCollection load(File albumFile) throws IOException {
 		try {
 			Unmarshaller unmarshaller = jc.createUnmarshaller();
-			AlbumCollection albums = (AlbumCollection) unmarshaller.unmarshal(new FileInputStream(albumFile));
-			return albums;
+			return (AlbumCollection) unmarshaller.unmarshal(new FileInputStream(albumFile));
 		} catch (JAXBException e) {
 			log.error(e);
 			throw new IllegalArgumentException();
