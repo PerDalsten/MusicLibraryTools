@@ -8,7 +8,7 @@ import org.apache.logging.log4j.Logger;
 
 public class DerbyExport {
 
-	private final static Logger log = LogManager.getLogger(DerbyExport.class);
+	private static final Logger log = LogManager.getLogger(DerbyExport.class);
 
 	static {
 		try {
