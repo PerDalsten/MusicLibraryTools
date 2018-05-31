@@ -6,7 +6,13 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
-import java.util.*;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.LinkedList;
+import java.util.Map;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -14,7 +20,7 @@ import org.apache.logging.log4j.Logger;
 public class AlbumDB {
 
 	private static final Logger log = LogManager.getLogger(AlbumDB.class);
-	
+
 	private static final String SELECT_ARTIST_SQL = "SELECT id, artist_name AS artist FROM artist";
 
 	private static final String INSERT_ALBUM_SQL = "INSERT INTO album (artist_id, album_title, album_year) VALUES (?,?,?)";
@@ -40,7 +46,7 @@ public class AlbumDB {
 	public void save(Album album) throws AlbumException {
 		save(Collections.singletonList(album).iterator());
 	}
-	
+
 	public void save(Iterator<Album> albums) throws AlbumException {
 		try (Connection con = getConnection()) {
 			con.setAutoCommit(false);
@@ -52,25 +58,26 @@ public class AlbumDB {
 					PreparedStatement stmtSong = con.prepareStatement(INSERT_SONG_SQL)) {
 
 				Map<String, Integer> artistMap = new HashMap<>();
-				try (PreparedStatement stmtExistingArtists = con.prepareStatement(SELECT_ARTIST_SQL)) {
-					ResultSet rsExistingArtists = stmtExistingArtists.executeQuery();
+				try (PreparedStatement stmtExistingArtists = con.prepareStatement(SELECT_ARTIST_SQL);
+						ResultSet rsExistingArtists = stmtExistingArtists.executeQuery()) {
 					while (rsExistingArtists.next()) {
 						artistMap.put(rsExistingArtists.getString("artist"), rsExistingArtists.getInt("id"));
 					}
 				}
 
 				while (albums.hasNext()) {
-					ResultSet rsArtist;
 
 					Album album = albums.next();
 					if (artistMap.get(album.getArtist()) == null) {
 						stmtArtist.setString(1, album.getArtist());
 						stmtArtist.executeUpdate();
-						rsArtist = stmtArtist.getGeneratedKeys();
-						if (rsArtist.next()) {
-							int artist_id = rsArtist.getInt(1);
-							artistMap.put(album.getArtist(), artist_id);
-							log.info("Created artist: " + album.getArtist() + " with id: " + artist_id);
+
+						try (ResultSet rsArtist = stmtArtist.getGeneratedKeys();) {
+							if (rsArtist.next()) {
+								int artist_id = rsArtist.getInt(1);
+								artistMap.put(album.getArtist(), artist_id);
+								log.info("Created artist: " + album.getArtist() + " with id: " + artist_id);
+							}
 						}
 					}
 
@@ -80,9 +87,10 @@ public class AlbumDB {
 					stmtAlbum.executeUpdate();
 
 					int album_id = -1;
-					ResultSet rsAlbum = stmtAlbum.getGeneratedKeys();
-					if (rsAlbum.next()) {
-						album_id = rsAlbum.getInt(1);
+					try (ResultSet rsAlbum = stmtAlbum.getGeneratedKeys()) {
+						if (rsAlbum.next()) {
+							album_id = rsAlbum.getInt(1);
+						}
 					}
 
 					log.info("Created album: " + album + " with id: " + album_id);
@@ -115,10 +123,8 @@ public class AlbumDB {
 		try (Connection con = getConnection()) {
 			con.setAutoCommit(true);
 
-			try (PreparedStatement stmtAlbum = con.prepareStatement(SELECT_ALBUM_SQL)) {
-
-				ResultSet rsAlbum = stmtAlbum.executeQuery();
-
+			try (PreparedStatement stmtAlbum = con.prepareStatement(SELECT_ALBUM_SQL);
+					ResultSet rsAlbum = stmtAlbum.executeQuery()) {
 				while (rsAlbum.next()) {
 					Album album = new Album();
 					album.setArtist(rsAlbum.getString("artist"));
@@ -128,10 +134,8 @@ public class AlbumDB {
 				}
 			}
 
-			try (PreparedStatement stmtSong = con.prepareStatement(SELECT_SONG_SQL)) {
-
-				ResultSet rsSong = stmtSong.executeQuery();
-
+			try (PreparedStatement stmtSong = con.prepareStatement(SELECT_SONG_SQL);
+					ResultSet rsSong = stmtSong.executeQuery()) {
 				while (rsSong.next()) {
 					Song song = new Song();
 					song.setTitle(rsSong.getString("title"));

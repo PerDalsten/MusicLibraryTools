@@ -4,7 +4,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>dk.purplegreen.musiclibrary</groupId>
 	<artifactId>MusicLibraryTools</artifactId>
-	<version>1.2.3</version>
+	<version>1.2.4-SNAPSHOT</version>
 	<packaging>jar</packaging>
 
 	<name>MusicLibraryTools</name>
@@ -20,7 +20,7 @@
 		<mp3agic.version>0.9.0</mp3agic.version>
 	</properties>
 
-	<dependencies>
+	<dependencies>	
 		<dependency>
 			<groupId>org.apache.derby</groupId>
 			<artifactId>derbyclient</artifactId>
@@ -47,6 +47,12 @@
 			<groupId>junit</groupId>
 			<artifactId>junit</artifactId>
 			<version>${junit.version}</version>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.apache.derby</groupId>
+			<artifactId>derby</artifactId>
+			<version>${derby.version}</version>
 			<scope>test</scope>
 		</dependency>
 	</dependencies>
