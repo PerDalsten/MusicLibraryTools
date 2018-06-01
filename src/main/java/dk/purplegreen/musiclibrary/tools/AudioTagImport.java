@@ -1,6 +1,7 @@
 package dk.purplegreen.musiclibrary.tools;
 
 import java.io.File;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Properties;
@@ -38,6 +39,8 @@ public class AudioTagImport {
 		File outDir = new File(p.getProperty("albumdir"));
 		outDir.mkdirs();
 
+		albums.forEach((key, album) -> album.getSongs().sort(Comparator.comparing(Song::getTrack)));
+
 		new AlbumIO().save(new AlbumCollection(albums.values()), outDir);
 	}
 
@@ -66,9 +69,9 @@ public class AudioTagImport {
 					album.setTitle(title);
 					album.setYear(Integer.valueOf(tag.getYear()));
 					albums.put(key, album);
-					if (log.isInfoEnabled()) {
-						log.info("Added album: " + album);
-					}
+
+					log.info("Added album: {}", album);
+
 				}
 
 				Song song = new Song();
@@ -77,12 +80,11 @@ public class AudioTagImport {
 				song.setDisc(tag.getPartOfSet() == null ? 1 : Integer.valueOf(tag.getPartOfSet()));
 
 				album.getSongs().add(song);
-				if (log.isInfoEnabled()) {
-					log.info("Added song: " + song);
-				}
+
+				log.info("Added song: {}", song);
 
 			} else
-				log.error("Missing ID3v2 tag in file: " + mp3File);
+				log.error("Missing ID3v2 tag in file: {}", mp3File);
 		}
 	}
 }

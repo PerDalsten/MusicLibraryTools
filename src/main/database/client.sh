@@ -9,6 +9,6 @@ JAVA=$JAVA_HOME/bin/java
 # Embedded: CONNECT 'jdbc:derby:musiclibrarydb;create=true';
 # Network Client: CONNECT 'jdbc:derby://localhost:1527/musiclibrarydb;create=true';
 
-# To create database from ij: run '../resources/musiclibrary.sql';
+# To create database from ij: run '../resources/musiclibrary-derby.sql';
 
 $JAVA -Dderby.system.home=$DERBY_DATA -jar $DERBY_HOME/lib/derbyrun.jar ij
