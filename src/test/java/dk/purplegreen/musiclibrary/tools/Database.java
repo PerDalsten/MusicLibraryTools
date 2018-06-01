@@ -44,7 +44,7 @@ public class Database extends ExternalResource {
 
 			// Create schema
 			try (BufferedReader reader = new BufferedReader(
-					new InputStreamReader(FileTest.class.getResourceAsStream("/musiclibrary-derby.sql")))) {
+					new InputStreamReader(Database.class.getResourceAsStream("/musiclibrary-derby.sql")))) {
 
 				StringBuilder cmd = new StringBuilder();
 
@@ -72,7 +72,7 @@ public class Database extends ExternalResource {
 
 			// Create test data
 			try (BufferedReader reader = new BufferedReader(
-					new InputStreamReader(FileTest.class.getResourceAsStream("/testdata.sql")))) {
+					new InputStreamReader(Database.class.getResourceAsStream("/testdata.sql")))) {
 
 				for (String line; (line = reader.readLine()) != null;) {
 
