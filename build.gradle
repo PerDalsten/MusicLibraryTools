@@ -2,7 +2,7 @@ plugins {
   id "org.sonarqube" version "2.6"
 }
 
-version = '1.2.3'
+version = '1.2.4'
 
 apply plugin: 'java'
 sourceCompatibility = 1.8
@@ -16,11 +16,11 @@ repositories {
 
 dependencies {
 
-    compile 'com.mpatric:mp3agic:0.9.0'
+    compile 'com.mpatric:mp3agic:0.9.1'
     compile 'org.apache.logging.log4j:log4j-core:2.8.2'
 
-    runtime 'org.apache.derby:derbyclient:10.13.1.1'
-    runtime 'mysql:mysql-connector-java:6.0.6'
+    runtime 'org.apache.derby:derbyclient:10.14.2.0'
+    runtime 'mysql:mysql-connector-java:8.0.11'
 
     testCompile 'junit:junit:4.12'
 }
