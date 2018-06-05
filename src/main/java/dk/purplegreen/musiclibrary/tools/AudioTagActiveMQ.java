@@ -5,7 +5,6 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.Properties;
-import java.util.StringJoiner;
 import java.util.stream.Stream;
 
 import javax.jms.Connection;
@@ -20,6 +19,7 @@ import org.apache.activemq.ActiveMQConnectionFactory;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.mpatric.mp3agic.ID3v2;
 import com.mpatric.mp3agic.InvalidDataException;
 import com.mpatric.mp3agic.Mp3File;
@@ -51,6 +51,28 @@ public class AudioTagActiveMQ {
 		}
 	}
 
+	private static class MP3Song {
+		public String artist;
+		public String album;
+		public Integer year;
+		public String title;
+		public Integer track;
+		public Integer disc;
+
+		private MP3Song(String artist, String album, String year, String title, String track, String disc) {
+			this.artist = artist;
+			this.album = album;
+			this.year = Integer.valueOf(year);
+			this.title = title;
+			this.track = Integer.valueOf(track);
+			if (disc == null)
+				this.disc = 1;
+			else
+				this.disc = Integer.valueOf(disc);
+		}
+
+	}
+
 	public void importAudioTag() throws Exception {
 
 		try {
@@ -71,19 +93,15 @@ public class AudioTagActiveMQ {
 			Mp3File mp3 = new Mp3File(mp3File.toAbsolutePath().toString());
 
 			if (mp3.hasId3v2Tag()) {
-				ID3v2 tag = mp3.getId3v2Tag();
+				ID3v2 tag = mp3.getId3v2Tag();			
 
-				StringJoiner result = new StringJoiner(",", "{", "}");
+				MP3Song song = new MP3Song(tag.getArtist(), tag.getAlbum(), tag.getYear(), tag.getTitle(),
+						tag.getTrack(), tag.getPartOfSet());
 
-				result.add(String.format("\"artist\": \"%s\"", tag.getArtist()));
-				result.add(String.format("\"album\": \"%s\"", tag.getAlbum()));
-				result.add(String.format("\"year\": %d", Integer.valueOf(tag.getYear())));
-				result.add(String.format("\"title\": \"%s\"", tag.getTitle()));
-				result.add(String.format("\"track\": %d", Integer.valueOf(tag.getTrack())));
-				result.add(String.format("\"disc\": %d",
-						tag.getPartOfSet() == null ? 1 : Integer.valueOf(tag.getPartOfSet())));
+				ObjectMapper mapper = new ObjectMapper();
+				String result = mapper.writeValueAsString(song);
 
-				log.info("Submitting song: {}", result.toString());
+				log.info("Submitting song: {}", result);
 
 				Session session = null;
 				MessageProducer producer = null;
