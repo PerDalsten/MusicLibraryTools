@@ -74,9 +74,9 @@ public class AlbumDB {
 
 						try (ResultSet rsArtist = stmtArtist.getGeneratedKeys();) {
 							if (rsArtist.next()) {
-								int artist_id = rsArtist.getInt(1);
-								artistMap.put(album.getArtist(), artist_id);
-								log.info("Created artist: {} with id: ", album.getArtist(), artist_id);
+								int artistId = rsArtist.getInt(1);
+								artistMap.put(album.getArtist(), artistId);
+								log.info("Created artist: {} with id: ", album.getArtist(), artistId);
 							}
 						}
 					}
@@ -86,17 +86,17 @@ public class AlbumDB {
 					stmtAlbum.setInt(3, album.getYear());
 					stmtAlbum.executeUpdate();
 
-					int album_id = -1;
+					int albumId = -1;
 					try (ResultSet rsAlbum = stmtAlbum.getGeneratedKeys()) {
 						if (rsAlbum.next()) {
-							album_id = rsAlbum.getInt(1);
+							albumId = rsAlbum.getInt(1);
 						}
 					}
 
-					log.info("Created album: {} with id: ", album, album_id);
+					log.info("Created album: {} with id: ", album, albumId);
 
 					for (Song song : album.getSongs()) {
-						stmtSong.setInt(1, album_id);
+						stmtSong.setInt(1, albumId);
 						stmtSong.setString(2, song.getTitle());
 						stmtSong.setInt(3, song.getTrack());
 						stmtSong.setInt(4, song.getDisc());
@@ -126,23 +126,16 @@ public class AlbumDB {
 			try (PreparedStatement stmtAlbum = con.prepareStatement(SELECT_ALBUM_SQL);
 					ResultSet rsAlbum = stmtAlbum.executeQuery()) {
 				while (rsAlbum.next()) {
-					Album album = new Album();
-					album.setArtist(rsAlbum.getString("artist"));
-					album.setTitle(rsAlbum.getString("title"));
-					album.setYear(rsAlbum.getInt("yr"));
-					albums.put(rsAlbum.getInt("id"), album);
+					albums.put(rsAlbum.getInt("id"),
+							new Album(rsAlbum.getString("artist"), rsAlbum.getString("title"), rsAlbum.getInt("yr")));
 				}
 			}
 
 			try (PreparedStatement stmtSong = con.prepareStatement(SELECT_SONG_SQL);
 					ResultSet rsSong = stmtSong.executeQuery()) {
 				while (rsSong.next()) {
-					Song song = new Song();
-					song.setTitle(rsSong.getString("title"));
-					song.setTrack(rsSong.getInt("track"));
-					song.setDisc(rsSong.getInt("disc"));
-
-					albums.get(rsSong.getInt("album_id")).getSongs().add(song);
+					albums.get(rsSong.getInt("album_id")).getSongs()
+							.add(new Song(rsSong.getString("title"), rsSong.getInt("track"), rsSong.getInt("disc")));
 				}
 
 				LinkedList<Album> result = new LinkedList<>(albums.values());

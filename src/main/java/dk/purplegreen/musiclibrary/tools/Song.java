@@ -16,6 +16,12 @@ public class Song {
 		this.track = track;
 	}
 
+	public Song(String title, int track, int disc) {
+		this.title = title;
+		this.track = track;
+		this.disc = disc;
+	}
+
 	public String getTitle() {
 		return title;
 	}

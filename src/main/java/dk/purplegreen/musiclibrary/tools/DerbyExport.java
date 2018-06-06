@@ -1,6 +1,7 @@
 package dk.purplegreen.musiclibrary.tools;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.Properties;
 
 import org.apache.logging.log4j.LogManager;
@@ -12,14 +13,13 @@ public class DerbyExport {
 
 	static {
 		try {
-			Class.forName("org.apache.derby.jdbc.ClientDriver");	
+			Class.forName("org.apache.derby.jdbc.ClientDriver");
 		} catch (ClassNotFoundException e) {
 			log.error("Error initializing AlbumDB", e);
 			throw new IllegalStateException("Unable to load database driver", e);
 		}
 	}
-	
-	
+
 	public static void main(String[] args) {
 		try {
 			new DerbyExport().export();
@@ -29,7 +29,7 @@ public class DerbyExport {
 		}
 	}
 
-	private void export() throws Exception {
+	private void export() throws IOException, AlbumException {
 		Properties p = new Properties();
 		p.load(DerbyExport.class.getResourceAsStream("/musiclibrarytools.properties"));
 

@@ -58,26 +58,17 @@ public class AudioTagImport {
 			if (mp3.hasId3v2Tag()) {
 				ID3v2 tag = mp3.getId3v2Tag();
 
-				String artist = tag.getArtist();
-				String title = tag.getAlbum();
-				String key = artist + title;
+				final String artist = tag.getArtist();
+				final String title = tag.getAlbum();
+				final String key = artist + title;
+				final int year = Integer.parseInt(tag.getYear());
 
-				Album album = albums.get(key);
-				if (album == null) {
-					album = new Album();
-					album.setArtist(artist);
-					album.setTitle(title);
-					album.setYear(Integer.valueOf(tag.getYear()));
-					albums.put(key, album);
-
-					log.info("Added album: {}", album);
-
-				}
+				Album album = albums.computeIfAbsent(key, k -> new Album(artist, title, year));
 
 				Song song = new Song();
 				song.setTitle(tag.getTitle());
 				song.setTrack(Integer.valueOf(tag.getTrack()));
-				song.setDisc(tag.getPartOfSet() == null ? 1 : Integer.valueOf(tag.getPartOfSet()));
+				song.setDisc(tag.getPartOfSet() == null ? 1 : Integer.parseInt(tag.getPartOfSet()));
 
 				album.getSongs().add(song);
 

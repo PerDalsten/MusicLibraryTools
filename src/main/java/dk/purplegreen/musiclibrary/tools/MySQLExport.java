@@ -1,6 +1,7 @@
 package dk.purplegreen.musiclibrary.tools;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.Properties;
 
 import org.apache.logging.log4j.LogManager;
@@ -28,7 +29,7 @@ public class MySQLExport {
 		}
 	}
 
-	private void export() throws Exception {
+	private void export() throws IOException, AlbumException {
 		Properties p = new Properties();
 		p.load(MySQLExport.class.getResourceAsStream("/musiclibrarytools.properties"));
 

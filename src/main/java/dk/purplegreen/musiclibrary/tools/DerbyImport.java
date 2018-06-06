@@ -1,6 +1,7 @@
 package dk.purplegreen.musiclibrary.tools;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.Collection;
 import java.util.Properties;
 
@@ -29,7 +30,7 @@ public class DerbyImport {
 		}
 	}
 
-	public void importDerby() throws Exception {
+	public void importDerby() throws IOException, AlbumException {
 		Properties p = new Properties();
 		p.load(DerbyImport.class.getResourceAsStream("/musiclibrarytools.properties"));
 

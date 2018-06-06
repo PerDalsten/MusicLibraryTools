@@ -20,10 +20,7 @@ public class AlbumDBTest {
 	@Test
 	public void testSaveAlbum() throws Exception {
 
-		Album album = new Album();
-		album.setArtist("Rolling Stones");
-		album.setTitle("Beggars Banquet");
-		album.setYear(1968);
+		Album album = new Album("Rolling Stones", "Beggars Banquet", 1968);
 		album.getSongs().add(new Song("Sympathy for the Devil", 1));
 		album.getSongs().add(new Song("No Expectatopns", 2));
 		album.getSongs().add(new Song("Dear Doctor", 3));

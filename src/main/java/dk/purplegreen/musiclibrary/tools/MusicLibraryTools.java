@@ -3,7 +3,7 @@ package dk.purplegreen.musiclibrary.tools;
 public class MusicLibraryTools {
 
 	public static void main(String[] args) {
-		if (!(args.length > 0)) {
+		if (args.length == 0) {
 			showHelp();
 		} else {
 			switch (args[0]) {

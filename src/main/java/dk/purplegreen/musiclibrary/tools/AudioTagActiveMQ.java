@@ -52,7 +52,7 @@ public class AudioTagActiveMQ {
 		}
 	}
 
-	public void importAudioTag() throws Exception {
+	public void importAudioTag() throws IOException {
 		try {
 			connection = factory.createConnection();
 			connection.start();
@@ -61,8 +61,14 @@ public class AudioTagActiveMQ {
 				mp3Files.filter(Files::isRegularFile).filter(f -> f.getFileName().toString().endsWith("mp3"))
 						.map(this::getJSON).filter(Objects::nonNull).forEach(this::sendSong);
 			}
+		} catch (JMSException e) {
+			throw new IOException(e);
 		} finally {
-			connection.close();
+			try {
+				connection.close();
+			} catch (JMSException e) {
+				log.error(e);
+			}
 		}
 	}
 

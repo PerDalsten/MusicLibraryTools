@@ -13,6 +13,15 @@ public class Album {
 	private String artist;
 	private int year;
 
+	public Album() {
+	}
+
+	public Album(String artist, String title, int year) {
+		this.artist = artist;
+		this.title = title;
+		this.year = year;
+	}
+
 	public String getTitle() {
 		return title;
 	}

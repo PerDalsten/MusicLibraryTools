@@ -28,10 +28,7 @@ public class AlbumTest {
 	@Test
 	public void testRoundTrip() throws Exception {
 
-		Album album = new Album();
-		album.setArtist("Aerosmith");
-		album.setTitle("Draw the Line");
-		album.setYear(1977);
+		Album album = new Album("Aerosmith", "Draw the Line", 1977);
 
 		String[] songs = { "Draw the Line", "I Wanna Know Why", "Critical Mass", "Get It Up", "Bright Light Fright",
 				"Kings and Queens", "The Hand That Feeds", "Sight for Sore Eyes", "Milk Cow Blues" };
@@ -69,10 +66,7 @@ public class AlbumTest {
 
 	@Test
 	public void testAlbumToString() {
-		Album album = new Album();
-		album.setArtist("Aerosmith");
-		album.setTitle("Draw the Line");
-		album.setYear(1977);
+		Album album = new Album("Aerosmith", "Draw the Line", 1977);
 
 		assertEquals("Wrong toString", "Title: Draw the Line, Artist: Aerosmith, Year: 1977", album.toString());
 	}

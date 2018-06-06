@@ -35,12 +35,12 @@ public class MP3Song {
 	public MP3Song(String artist, String album, String year, String title, String track, String disc) {
 		this.artist = artist;
 		this.album = album;
-		this.year = Integer.valueOf(year);
+		this.year = Integer.parseInt(year);
 		this.title = title;
-		this.track = Integer.valueOf(track);
+		this.track = Integer.parseInt(track);
 		if (disc == null)
 			this.disc = 1;
 		else
-			this.disc = Integer.valueOf(disc);
+			this.disc = Integer.parseInt(disc);
 	}
 }
