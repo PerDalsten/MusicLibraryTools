@@ -4,9 +4,12 @@ Tools
 AudioTagImport: Import to xml from MP3
 PMAXMLImport: Import to xml from MySQL dump
 DerbyImport: Import to xml from Derby DB
+MySQLImport: Import to xml from MySQL DB
+HSQLImport: Import to xml from HyperSQL DB
 
 DerbyExport: Export xml to Derby DB
 MySQLExport: Export xml to MySQL DB
+HSQLExport: Export xml to HyperSQL DB
 
 AudioTagActiveMQ: Send audio tagged MP3 to ActiveMQ
 AlbumReport: Output summary of XML album file(s)
