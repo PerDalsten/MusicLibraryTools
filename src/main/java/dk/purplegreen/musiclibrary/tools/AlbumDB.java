@@ -76,7 +76,7 @@ public class AlbumDB {
 							if (rsArtist.next()) {
 								int artistId = rsArtist.getInt(1);
 								artistMap.put(album.getArtist(), artistId);
-								log.info("Created artist: {} with id: ", album.getArtist(), artistId);
+								log.info("Created artist: {} with id: {}", album.getArtist(), artistId);
 							}
 						}
 					}
@@ -93,7 +93,7 @@ public class AlbumDB {
 						}
 					}
 
-					log.info("Created album: {} with id: ", album, albumId);
+					log.info("Created album: {} with id: {}", album, albumId);
 
 					for (Song song : album.getSongs()) {
 						stmtSong.setInt(1, albumId);

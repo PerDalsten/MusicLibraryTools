@@ -4,7 +4,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>dk.purplegreen.musiclibrary</groupId>
 	<artifactId>MusicLibraryTools</artifactId>
-	<version>1.2.5</version>
+	<version>1.2.6-SNAPSHOT</version>
 	<packaging>jar</packaging>
 
 	<name>MusicLibraryTools</name>
