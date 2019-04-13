@@ -1,7 +1,6 @@
 @echo off
 setlocal
 
-set DERBY_HOME="%JAVA_HOME%\db"
 set DERBY_DATA=%~dp0
 
 set JAVA=%JAVA_HOME%\bin\java
