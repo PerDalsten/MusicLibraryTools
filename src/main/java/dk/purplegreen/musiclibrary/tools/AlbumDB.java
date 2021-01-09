@@ -29,7 +29,7 @@ public class AlbumDB {
 
 	private static final String INSERT_ARTIST_SQL = "INSERT INTO artist (artist_name) VALUES (?)";
 
-	private static final String SELECT_ALBUM_SQL = "SELECT album.id AS id, artist.artist_name AS artist, album.album_title AS title, album.album_year AS yr FROM album JOIN artist ON album.artist_id = artist.id ORDER BY artist, yr";
+	private static final String SELECT_ALBUM_SQL = "SELECT album.id AS id, artist.artist_name AS artist, album.album_title AS title, album.album_year AS yr FROM album JOIN artist ON album.artist_id = artist.id";
 
 	private static final String SELECT_SONG_SQL = "SELECT album_id, song_title AS title, track, disc FROM song ORDER BY album_id, disc, track";
 
@@ -141,7 +141,7 @@ public class AlbumDB {
 				LinkedList<Album> result = new LinkedList<>(albums.values());
 
 				result.sort(Comparator.comparing((Album album) -> album.getArtist().toLowerCase())
-						.thenComparing(Album::getYear));
+						.thenComparing(Album::getYear).thenComparing(album -> album.getTitle().toLowerCase()))  ;
 
 				return result;
 			}
