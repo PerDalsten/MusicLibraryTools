@@ -20,7 +20,7 @@
 		<junit.version>4.12</junit.version>
 		<mp3agic.version>0.9.1</mp3agic.version>
 		<activemq.version>5.15.9</activemq.version>
-		<jackson.version>2.9.8</jackson.version>
+		<jackson.version>2.9.10.7</jackson.version>
 	</properties>
 
 	<dependencies>	
